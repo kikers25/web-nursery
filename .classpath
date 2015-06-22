@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/v1"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/vosao-api-0.9.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/vosao-kernel-0.9.jar"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
-</classpath>
