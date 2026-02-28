@@ -151,3 +151,9 @@ $RECYCLE.BIN/
 # Linux trash folder which might appear on any partition or disk
 .Trash-*
 war/
+
+# Compiled class files (build output)
+WEB-INF/classes/
+
+# Compile-only dependencies (provided by GAE runtime)
+WEB-INF/lib/servlet-api-*.jar
