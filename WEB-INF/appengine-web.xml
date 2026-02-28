@@ -19,5 +19,10 @@
 	<threadsafe>true</threadsafe>
 	<warmup-requests-enabled>true</warmup-requests-enabled>
     <precompilation-enabled>true</precompilation-enabled>
-   
+
+    <!-- Grant access to Google Cloud APIs (required for Secret Manager). -->
+    <oauth-scopes>
+        <scope>https://www.googleapis.com/auth/cloud-platform</scope>
+    </oauth-scopes>
+
 </appengine-web-app>

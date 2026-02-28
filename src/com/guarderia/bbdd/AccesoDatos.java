@@ -23,6 +23,7 @@ import com.guarderia.bean.Bean;
 import com.guarderia.context.ContextProvider;
 import com.guarderia.context.ObjectContext;
 import com.guarderia.error.DataException;
+import com.guarderia.utils.GestorSecretos;
 
 import org.apache.commons.dbutils.BeanProcessor;
 
@@ -67,19 +68,31 @@ public class AccesoDatos {
 	private String sContrasena = null;
 	
 	/**
-	 * Url por defecto para acceder a la base de datos
+	 * Url por defecto para acceder a la base de datos.
+	 * Cargada desde Google Cloud Secret Manager en el primer uso.
 	 */
-	static private String URL_POR_DEFECTO = "jdbc:oracle:thin";
-	
+	static private String URL_POR_DEFECTO = null;
+
 	/**
-	 * Usuario por defecto para acceder a la base de datos
+	 * Usuario por defecto para acceder a la base de datos.
+	 * Cargado desde Google Cloud Secret Manager en el primer uso.
 	 */
-	static private String USUARIO_POR_DEFECTO = "guarderiaweb";
-	
+	static private String USUARIO_POR_DEFECTO = null;
+
 	/**
-	 * Contraseña por defecto para acceder a la base de datos
+	 * Contraseña por defecto para acceder a la base de datos.
+	 * Cargada desde Google Cloud Secret Manager en el primer uso.
 	 */
-	static private String CONTRASENA_POR_DEFECTO = "guarderia";
+	static private String CONTRASENA_POR_DEFECTO = null;
+
+	/** Inicializa las credenciales de BD desde Secret Manager (una sola vez). */
+	private static synchronized void cargarCredencialesBD() {
+		if (URL_POR_DEFECTO == null) {
+			URL_POR_DEFECTO        = GestorSecretos.obtenerUrlBD();
+			USUARIO_POR_DEFECTO    = GestorSecretos.obtenerUsuarioBD();
+			CONTRASENA_POR_DEFECTO = GestorSecretos.obtenerContrasenaBD();
+		}
+	}
 	
 	/**
 	 * Atributo utilizada para escribir trazas
@@ -91,6 +104,7 @@ public class AccesoDatos {
 	 *
 	 */
 	public AccesoDatos(){
+		cargarCredencialesBD();
 		sUrl = URL_POR_DEFECTO;
 		sUsuario = USUARIO_POR_DEFECTO;
 		sContrasena = CONTRASENA_POR_DEFECTO;
