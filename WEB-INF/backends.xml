@@ -1,8 +1,1 @@
-<backends>
-  <backend name="pub">
-    <class>B1</class>
-    <options>
-      <dynamic>true</dynamic>
-    </options>
- </backend>
-</backends>
+<backends/>

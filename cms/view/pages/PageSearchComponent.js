@@ -1,6 +1,6 @@
 /**
  * Vosao CMS. Simple CMS for Google App Engine.
- * 
+ *
  * Copyright (C) 2009-2010 Vosao development team.
  *
  * This library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
  */
 
 Vosao.PageSearchComponent = function(div) {
-	
+
 	var h = messages('pages.search_pages') + ' : <input name="query" type="text" /> '
 		+ '<input id="search" type="button" value="' + messages('search') + '"/> '
 		+ '<input id="clear" type="button" value="' + messages('clear') + '"/> '
@@ -42,16 +42,14 @@ Vosao.PageSearchComponent = function(div) {
 		+ '<div id="pageSearchResult"></div>';
 	$(div).html(h);
     $(".datepicker").datepicker({dateFormat:'dd.mm.yy'});
-	
-	$(div + ' #search').click(onSearch); 
+
+	$(div + ' #search').click(onSearch);
 	$(div + ' #clear').click(function() {
 		$(div + ' #pageSearchResult').html('');
 		$(div + ' input[name=query]').val('');
-	}); 
+	});
 	$(div + ' #enhancedSearch').click(onEnhancedSearch);
-	
-	$(div + ' #search').hide();
-	Vosao.initChannel(onChannelOpened, onChannelMessage, onChannelError, onChannelClose);
+
 	$(div + ' input[name=query]').keypress(function(e) {
 		var code = (e.keyCode ? e.keyCode : e.which);
         if (code == 13 || code == 10) {
@@ -61,48 +59,19 @@ Vosao.PageSearchComponent = function(div) {
 	});
 	return this;
 
-	
+
 	function onSearch() {
-		$(div + ' #pageSearchResult').html('');
-		$(div + ' #progress').html('<img src="/static/images/ajax-loader.gif" />');
-		var params = {};
-		params.query = $(div + ' input[name=query]').val();
-		params.published = $(div + ' #publishedSearch:checked').size() > 0;
-		params.unpublished = $(div + ' #unpublishedSearch:checked').size() > 0;
-		params.fromDate = $(div + ' input[name=from]').val();
-		params.toDate = $(div + ' input[name=to]').val();
-		Vosao.sendChannelCommand('pageSearch', params);
+		$(div + ' #pageSearchResult').html(
+			'<p>La búsqueda de páginas no está disponible en esta versión desplegada.</p>'
+		);
 	}
-	
+
 	function onEnhancedSearch() {
 		$(div + ' #enhancedDiv').slideToggle();
 		var linkLabel = messages('enhanced');
 		if ($(div + ' #enhancedSearch').text() == messages('enhanced')) {
 			linkLabel = messages('simple');
-		}	
+		}
 		$(div + ' #enhancedSearch').text(linkLabel);
 	}
-	
-	function onChannelOpened() {
-		$(div + ' #search').toggle();
-	}
-	
-	function onChannelMessage(message) {
-		var m = eval(message.data);
-		if (m.end) {
-			$(div + ' #progress').html('');
-			return;
-		}
-		var h = '<div><a href="/cms/page/content.vm?id=' + m.id + '">' + m.title 
-			+ '</a> ' + messages('version') + ': '
-			+ m.version + '<br>' + m.content;
-		$(div + ' #pageSearchResult').append(h);
-	} 
-	
-	function onChannelError(error) {
-		Vosao.error(error.code + ' ' + error.description);
-	} 
-	
-	function onChannelClose() {	
-	}		
 }
