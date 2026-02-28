@@ -1,20 +1,20 @@
-# Guía de despliegue en Google App Engine (Standard Java 8)
+# Deploying to Google App Engine (Standard Java 8)
 
-## Prerrequisitos
+## Prerequisites
 
-### Software necesario
+### Required software
 
-| Herramienta | Versión mínima | Verificar con |
+| Tool | Minimum version | Check with |
 |---|---|---|
 | Java JDK | 8 | `java -version` |
 | Maven | 3.x | `mvn -version` |
-| Google Cloud SDK | Última | `gcloud version` |
+| Google Cloud SDK | Latest | `gcloud version` |
 
-### Instalar Google Cloud SDK
+### Install Google Cloud SDK
 
-Descarga e instala desde: https://cloud.google.com/sdk/docs/install
+Download and install from: https://cloud.google.com/sdk/docs/install
 
-Tras instalar, inicia sesión:
+Then log in:
 
 ```bash
 gcloud auth login
@@ -22,139 +22,139 @@ gcloud auth login
 
 ---
 
-## 1. Crear el proyecto en Google Cloud
+## 1. Create a Google Cloud project
 
-1. Ve a https://console.cloud.google.com
-2. Crea un nuevo proyecto
-3. Anota el **Project ID** (ej. `guarderiaweb-2025`)
+1. Go to https://console.cloud.google.com
+2. Create a new project
+3. Note down the **Project ID** (e.g. `guarderiaweb-2025`)
 
-> **Importante:** El Project ID debe coincidir con el valor de `<application>` en `WEB-INF/appengine-web.xml`.
-> Actualmente está configurado como `guarderiaweb`. Si tu Project ID es diferente, edita ese fichero.
+> **Important:** The Project ID must match the value of `<application>` in `WEB-INF/appengine-web.xml`.
+> It is currently set to `guarderiaweb`. If your Project ID is different, update that file.
 
 ---
 
-## 2. Ajustar el ID de aplicación (si es necesario)
+## 2. Update the application ID (if needed)
 
-Edita `WEB-INF/appengine-web.xml` y cambia:
+Edit `WEB-INF/appengine-web.xml` and change:
 
 ```xml
 <application>guarderiaweb</application>
 ```
 
-por el Project ID real que hayas creado en GCP.
+to your actual GCP Project ID.
 
 ---
 
-## 3. Inicializar App Engine en el proyecto
+## 3. Initialize App Engine in the project
 
 ```bash
-gcloud config set project TU_PROJECT_ID
+gcloud config set project YOUR_PROJECT_ID
 gcloud app create --region=europe-west
 ```
 
-Para la región, las opciones europeas disponibles son:
-- `europe-west` (Bélgica) — recomendada para España
+Available European regions:
+- `europe-west` (Belgium) — recommended for Spain
 
 ---
 
-## 4. Compilar la aplicación
+## 4. Build the application
 
-Desde la raíz del proyecto:
+From the project root:
 
 ```bash
 mvn clean package
 ```
 
-Esto genera el WAR expandido en la carpeta `war/`.
+This generates the expanded WAR in the `war/` folder.
 
-> La carpeta `war/` está en `.gitignore` — es el artefacto de build, no se sube al repositorio.
+> The `war/` folder is listed in `.gitignore` — it is a build artifact and should not be committed.
 
 ---
 
-## 5. Desplegar en GAE
+## 5. Deploy to GAE
 
 ```bash
 gcloud app deploy war/
 ```
 
-El comando detecta automáticamente el `WEB-INF/appengine-web.xml` dentro de `war/`.
+The command automatically detects `WEB-INF/appengine-web.xml` inside `war/`.
 
-Cuando pregunte `Do you want to continue?`, confirma con **Y**.
+When prompted `Do you want to continue?`, confirm with **Y**.
 
 ---
 
-## 6. Abrir la aplicación
+## 6. Open the application
 
 ```bash
 gcloud app browse
 ```
 
-O accede directamente a: `https://TU_PROJECT_ID.appspot.com`
+Or go directly to: `https://YOUR_PROJECT_ID.appspot.com`
 
 ---
 
-## Comandos útiles
+## Useful commands
 
 ```bash
-# Ver logs en tiempo real
+# Stream logs in real time
 gcloud app logs tail -s default
 
-# Ver versiones desplegadas
+# List deployed versions
 gcloud app versions list
 
-# Detener una versión (para no incurrir en costes)
+# Stop a version (to avoid charges)
 gcloud app versions stop live
 ```
 
 ---
 
-## Primer arranque
+## First startup
 
-La primera vez que accedas, Vosao CMS iniciará su proceso de configuración automática. Verás la pantalla de setup donde podrás:
+On first access, Vosao CMS will run its automatic setup process. You will see a setup screen where you can:
 
-1. Crear el usuario administrador
-2. Configurar el sitio
+1. Create the administrator user
+2. Configure the site
 
 ---
 
-## Costes (tier gratuito)
+## Cost (free tier)
 
-Con uso normal de una guardería pequeña, la app debería mantenerse dentro del tier gratuito de GAE:
+For normal use by a small childcare facility, the app should stay within GAE's free tier:
 
-| Recurso | Límite gratuito diario |
+| Resource | Free daily limit |
 |---|---|
-| Instancias F1 | 28 horas de instancia |
-| Datastore (lecturas) | 50.000 operaciones |
-| Datastore (escrituras) | 20.000 operaciones |
-| Tráfico de salida | 1 GB |
-| Almacenamiento Datastore | 1 GB total |
+| F1 instances | 28 instance hours |
+| Datastore reads | 50,000 operations |
+| Datastore writes | 20,000 operations |
+| Outbound traffic | 1 GB |
+| Datastore storage | 1 GB total |
 
-Si la app supera estos límites, Google cobra por el exceso. Para un uso de oficina pequeña es improbable.
+If the app exceeds these limits, Google charges for the overage. For small office use this is unlikely.
 
 ---
 
-## Limitaciones conocidas tras la migración
+## Known limitations after migration
 
-| Funcionalidad | Estado | Motivo |
+| Feature | Status | Reason |
 |---|---|---|
-| Buscador de páginas (CMS admin) | No disponible | Requería Channel API, eliminada por Google en 2021 |
-| Resto de la aplicación | Operativo | — |
+| Page search (CMS admin) | Not available | Required Channel API, removed by Google in 2021 |
+| Rest of the application | Operational | — |
 
 ---
 
-## Solución de problemas frecuentes
+## Troubleshooting
 
 ### Error: `The requested URL was not found`
-- Verifica que el despliegue terminó correctamente con `gcloud app versions list`
-- Comprueba los logs: `gcloud app logs tail -s default`
+- Verify the deployment completed successfully with `gcloud app versions list`
+- Check the logs: `gcloud app logs tail -s default`
 
 ### Error: `java.lang.ClassNotFoundException`
-- Asegúrate de haber compilado con `mvn clean package` antes de desplegar
-- Verifica que la carpeta `war/WEB-INF/lib/` contiene todos los JARs
+- Make sure you ran `mvn clean package` before deploying
+- Verify that `war/WEB-INF/lib/` contains all JAR files
 
-### Error: `Project not found` al desplegar
-- Ejecuta `gcloud config set project TU_PROJECT_ID`
-- Verifica que el Project ID en `appengine-web.xml` coincide exactamente
+### Error: `Project not found` when deploying
+- Run `gcloud config set project YOUR_PROJECT_ID`
+- Verify that the Project ID in `appengine-web.xml` matches exactly
 
-### La app tarda mucho en responder la primera vez
-- Normal. GAE Standard arranca la instancia en frío cuando no hay tráfico. El warmup puede tardar 10-20 segundos.
+### The app is slow to respond on the first request
+- This is normal. GAE Standard cold-starts the instance when there is no traffic. Warmup can take 10–20 seconds.

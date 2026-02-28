@@ -275,6 +275,12 @@ appcfg.sh update war/
 - Do not commit files in `war/` — it is build output and gitignored
 - Do not add `target/` or Maven build artifacts — gitignored
 
+### Language
+
+- All documentation files (`.md`, guides, comments in new files) must be written in **English**
+- This applies even when the user communicates in Spanish
+- The Spanish naming of Java identifiers, variables, and existing comments is unaffected by this rule
+
 ---
 
 ## Testing
