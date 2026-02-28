@@ -268,6 +268,11 @@ appcfg.sh update war/
 - **Serialization:** All serializable beans include `serialVersionUID`
 - **Package root:** `com.guarderia`
 
+### Git
+
+- **Commit messages:** Always written in English
+- **Branch names:** Always in English (e.g., `feature/add-student-export`, `fix/login-redirect`)
+
 ### Do Not
 
 - Do not rename Spanish identifiers to English — the Spanish naming is intentional and consistent
